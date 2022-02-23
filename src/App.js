@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [text, setText] = useState("");
   const [todos, setTodos] = useState([{ text: "" }]);
 
@@ -9,9 +10,33 @@ const App = () => {
     await axios.post(`${process.env.REACT_APP_API}/add`, { text });
     setTodos([...todos, { text }]);
     setText("");
+    console.log(todos);
   };
 
-  useEffect(() => {}, []);
+  const clear = async () => {
+    await axios.post(`${process.env.REACT_APP_API}/clear`);
+    setTodos([{ text: "" }]);
+    setText("");
+    console.log(todos);
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const info = await axios.get(`${process.env.REACT_APP_API}/get`);
+
+      info.data.data.forEach((item) => {
+        todos.push({ text: item.text });
+      });
+      console.log(todos);
+      setIsLoading(false);
+    };
+
+    getData();
+  }, []);
+
+  if (isLoading) {
+    return "Loading...";
+  }
 
   return (
     <div className="flex justify-center items-center px-4 py-4">
@@ -41,6 +66,14 @@ const App = () => {
               onClick={() => add()}
             >
               ADD
+            </button>
+          </div>
+          <div className="my-2">
+            <button
+              className="px-2 py-2 bg-black text-white w-full"
+              onClick={() => clear()}
+            >
+              CLEAR
             </button>
           </div>
         </div>
