@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-require("dotenv").config();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -8,14 +7,16 @@ const App = () => {
   const [todos, setTodos] = useState([{ text: "" }]);
 
   const add = async () => {
-    await axios.post(`${process.env.REACT_APP_API}/add`, { text });
+    await axios.post(`${process.env.REACT_APP_ENPOINT_API_BACKEND}/add`, {
+      text,
+    });
     setTodos([...todos, { text }]);
     setText("");
     console.log(todos);
   };
 
   const clear = async () => {
-    await axios.post(`${process.env.REACT_APP_API}/clear`);
+    await axios.post(`${process.env.REACT_APP_ENPOINT_API_BACKEND}/clear`);
     setTodos([{ text: "" }]);
     setText("");
     console.log(todos);
@@ -25,7 +26,9 @@ const App = () => {
     console.log(process.env);
 
     const getData = async () => {
-      const info = await axios.get(`${process.env.REACT_APP_API}/get`);
+      const info = await axios.get(
+        `${process.env.REACT_APP_ENPOINT_API_BACKEND}/get`
+      );
 
       info.data.data.forEach((item) => {
         todos.push({ text: item.text });
