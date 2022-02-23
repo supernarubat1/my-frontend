@@ -21,6 +21,8 @@ const App = () => {
   };
 
   useEffect(() => {
+    console.log(process.env);
+
     const getData = async () => {
       const info = await axios.get(`${process.env.REACT_APP_API}/get`);
 
