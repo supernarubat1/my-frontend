@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Dev - Build Docker Image & Push to Azure
 
 on:
   push:
@@ -6,11 +6,24 @@ on:
   pull_request:
     branches: [develop]
 
+env:
+  REGISTRY: "narubatregistry.azurecr.io"
+  NAME: my-frontend
+  IMAGE_TAG: "0.0.1-SNAPSHOT"
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+
+      - name: Docker Build Image & Push to Azure
+        uses: mr-smithers-excellent/docker-build-push@v5.6
+        with:
+          image: ${{ env.NAME }}
+          tags: ${{ env.IMAGE_TAG }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
