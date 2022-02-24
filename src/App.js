@@ -17,7 +17,7 @@ const App = () => {
   };
 
   const delOne = async (id) => {
-    await axios.post(`${process.env.REACT_APP_API}/del`, { id });
+    await axios.delete(`${process.env.REACT_APP_API}/del`, { id });
     const filter = todos.filter((item) => item.id != id);
     setTodos(filter);
     setText("");
@@ -30,33 +30,36 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log(process.env);
-
     const getData = async () => {
       const info = await axios.get(`${process.env.REACT_APP_API}/get`);
       info.data.data.forEach((item) => {
         todos.push({ id: item._id, text: item.text });
       });
       setIsLoading(false);
-      console.log(todos);
     };
 
     getData();
   }, []);
 
   if (isLoading) {
-    return "Loading...";
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <h1 className="text-black" data-testid="loading">
+          Loading...
+        </h1>
+      </div>
+    );
   }
 
   return (
     <div className="flex justify-center items-center px-4 py-4">
       <div>
-        <h1 className="text-3xl font-bold">To Do List</h1>
+        <h1 className="text-3xl font-bold text-black">To Do List</h1>
         <div className="my-5 text-xl">
           {todos &&
             todos.map((todo, index) => (
               <div className="flex gap-2" key={index}>
-                <h1>{todo.text}</h1>
+                <h1 className="text-black">{todo.text}</h1>
                 <button
                   className="text-red-500"
                   onClick={() => delOne(todo.id)}
@@ -69,7 +72,7 @@ const App = () => {
         <div>
           <div>
             <input
-              className="border px-2 py-2"
+              className="border px-2 py-2 text-black"
               type="text"
               placeholder="Add to do..."
               onChange={(e) => setText(e.target.value)}
