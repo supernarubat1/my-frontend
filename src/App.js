@@ -17,7 +17,7 @@ const App = () => {
   };
 
   const delOne = async (id) => {
-    await axios.delete(`${process.env.REACT_APP_API}/del`, { id });
+    await axios.delete(`${process.env.REACT_APP_API}/del`, { data: { id } });
     const filter = todos.filter((item) => item.id != id);
     setTodos(filter);
     setText("");
